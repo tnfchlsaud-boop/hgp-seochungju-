@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0f172a" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="HGP 서충주" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<title>HGP 서충주 보고앱</title>
+<style>
+:root{--bg:#f1f5f9;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#dbe3ee;--accent:#2563eb;--accent2:#dbeafe;--danger:#dc2626}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink)}
+.app{max-width:760px;margin:0 auto;padding:14px 12px 40px}.top{background:#0f172a;color:#fff;border-radius:20px;padding:20px 18px;margin-bottom:12px}.top h1{font-size:22px;margin:0 0 4px}.top p{margin:0;color:#cbd5e1;font-size:13px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;position:sticky;top:0;z-index:5;padding:6px 0;background:var(--bg)}.tab{border:0;border-radius:13px;background:#fff;padding:11px 5px;font-weight:800;color:#475569;box-shadow:0 1px 4px #00000012}.tab.active{background:var(--accent);color:#fff}
+.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px #00000008}.card h2{font-size:16px;margin:0 0 12px}.subhead{font-size:14px;font-weight:900;margin:14px 0 8px}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}.field label{display:block;font-size:12px;font-weight:800;color:#475569;margin:0 0 5px}.field input,.field select,.field textarea{width:100%;border:1px solid #cbd5e1;background:#fff;border-radius:11px;padding:11px;font:inherit;font-size:15px;color:var(--ink)}.field textarea{min-height:68px;resize:vertical}.worker-select{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}.worker-chip{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 11px;font-weight:800;color:#334155}.worker-chip.on{border-color:var(--accent);background:var(--accent2);color:#1d4ed8}.worker-manage{display:flex;gap:7px;margin-top:8px}.worker-manage input{flex:1;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font:inherit}.worker-list{margin-top:8px}.worker-item{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e2e8f0;padding:8px 0}.worker-item button{border:0;background:#fee2e2;color:#b91c1c;border-radius:8px;padding:6px 9px;font-weight:800}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button,.chip{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 11px;font-weight:700;color:#334155}.seg button.on,.chip.on{border-color:var(--accent);background:var(--accent2);color:#1d4ed8}
+.line-grid{display:grid;grid-template-columns:44px 1fr;gap:7px;align-items:center;margin:7px 0}.line-no{font-weight:900;text-align:center}.line-state{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.line-state button{font-size:12px;padding:8px 3px}.line-state button.on{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 0 0 2px #bfdbfe}.line-state button.on::before{content:"✓ ";font-weight:900}.status-row{display:grid;grid-template-columns:42px 1fr 1.1fr;gap:6px;align-items:center;margin:7px 0}.time-picker{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;align-items:end}.time-part label{display:block;font-size:12px;font-weight:800;color:#475569;margin:0 0 5px}.time-step{display:grid;grid-template-columns:42px 1fr 42px;gap:5px;align-items:center}.time-step button{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:10px 0;font-size:18px;font-weight:900;color:#334155}.time-value{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:10px 6px;text-align:center;font-size:17px;font-weight:900}.now-btn{border:0;border-radius:10px;padding:11px 10px;background:#e2e8f0;font-weight:900;color:#0f172a;white-space:nowrap}.status-row b{text-align:center}.status-row select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:9px;background:#fff;font:inherit}
+.job-row{display:grid;grid-template-columns:1fr 1.15fr;gap:7px;align-items:center;margin:7px 0}.job-row .name{font-weight:800}.job-row select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:9px;background:#fff;font:inherit}
+.current-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.current-grid .chip{width:100%}.output{white-space:pre-wrap;background:#f8fafc;border:1px solid #cbd5e1;border-radius:14px;padding:15px;min-height:160px;font-size:15px;line-height:1.55}.preview{min-height:80px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.btn{border:0;border-radius:12px;padding:12px;font-weight:900;font-size:15px}.btn.primary{background:var(--accent);color:#fff}.btn.soft{background:#e2e8f0;color:#0f172a}.small{font-size:12px;color:var(--muted);line-height:1.45}.custom-line{display:flex;gap:7px;margin-top:8px}.custom-line input{flex:1;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font:inherit}.custom-list{margin-top:8px}.custom-item{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e2e8f0;padding:8px 0}.custom-item button{border:0;background:#fee2e2;color:#b91c1c;border-radius:8px;padding:6px 9px;font-weight:800}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#0f172a;color:white;padding:10px 14px;border-radius:12px;opacity:0;pointer-events:none;transition:.2s;z-index:20}.toast.show{opacity:1}.hidden{display:none!important}.divider{height:1px;background:#e2e8f0;margin:14px 0}
+@media(max-width:520px){.app{padding:10px 8px 32px}.top{border-radius:16px;padding:16px}.tabs{gap:5px}.tab{font-size:13px;padding:10px 3px}.card{border-radius:15px;padding:12px}.row{grid-template-columns:1fr}.line-state{grid-template-columns:repeat(4,1fr)}.status-row{grid-template-columns:36px 1fr 1.05fr}.field input,.field select,.status-row select,.job-row select{font-size:16px}.job-row{grid-template-columns:1fr 1.2fr}.time-picker{grid-template-columns:1fr 1fr}.now-btn{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><h1>HGP 서충주 보고앱 <span style="font-size:13px;color:#93c5fd;vertical-align:middle">v8</span></h1><p>출근·잔업 / 1층 변경 / 2층 변경</p></header>
+<nav class="tabs"><button class="tab active" data-tab="attendance">출근·잔업</button><button class="tab" data-tab="floor1">1층 변경</button><button class="tab" data-tab="floor2">2층 변경</button></nav>
+
+<section id="attendance" class="panel active">
+  <div class="card"><h2>기본 정보</h2><div class="row"><div class="field"><label>보고 날짜</label><input id="aDate" type="date"></div><div class="field"><label>근무</label><div class="seg" id="aShift"><button data-v="주간" class="on">주간</button><button data-v="야간">야간</button></div></div></div></div>
+  <div class="card"><h2>출근보고 입력</h2><div id="attWorkLines"></div><div class="field"><label>출근 인원</label><div id="attWorkPeople" class="worker-select"></div></div></div>
+  <div class="card"><h2>잔업보고 입력</h2><div id="attOtLines"></div><div class="field"><label>잔업 인원</label><div id="attOtPeople" class="worker-select"></div></div></div>
+
+  <div class="card"><h2>출근 보고문</h2><div id="attWorkOut" class="output"></div><div class="actions"><button class="btn primary" data-copy="attWorkOut">복사</button><button class="btn soft" data-share="attWorkOut">공유</button></div></div>
+  <div class="card"><h2>잔업 보고문</h2><div id="attOtOut" class="output"></div><div class="actions"><button class="btn primary" data-copy="attOtOut">복사</button><button class="btn soft" data-share="attOtOut">공유</button></div></div>
+  <div class="card"><h2>작업자 관리</h2><p class="small">작업자를 한 번 등록해두면 출근·잔업에서 터치해서 선택할 수 있습니다.</p><div class="worker-manage"><input id="newWorker" placeholder="작업자 이름"><button id="addWorker" class="btn primary" type="button">추가</button></div><div id="workerList" class="worker-list"></div></div>
+  <div class="card"><h2>데이터 백업</h2><p class="small">출근·잔업 / 1층 / 2층의 날짜별 기록과 작업자·추가 라인을 한 파일로 백업하거나 복원합니다.</p><div class="actions"><button class="btn primary" id="backupExport" type="button">백업 파일 저장</button><button class="btn soft" id="backupImportBtn" type="button">백업 불러오기</button></div><input id="backupImport" type="file" accept="application/json,.json" class="hidden"></div>
+</section>
+
+<section id="floor1" class="panel">
+  <div class="card"><h2>기본 정보</h2><div class="row"><div class="field"><label>보고 날짜</label><input id="f1Date" type="date"></div><div class="field"><label>근무</label><div class="seg" id="f1Shift"><button data-v="주간" class="on">주간</button><button data-v="야간">야간</button></div></div></div><div class="field"><label>변경 시간 (10분 단위)</label><div id="f1TimePicker" class="time-picker"></div></div></div>
+  <div class="card"><h2>라인별 상태</h2><p class="small">현재 상태를 설정하고, 실제로 바뀌는 라인만 변경 후 상태를 선택하세요. 1~4라인은 MV/ME/비가동, 5라인만 MV GT를 사용할 수 있습니다.</p><div id="f1Lines"></div></div>
+  <div class="card"><h2>보고문</h2><div id="f1Out" class="output"></div><div class="actions"><button class="btn primary" data-copy="f1Out">복사</button><button class="btn soft" data-share="f1Out">공유</button></div></div>
+</section>
+
+<section id="floor2" class="panel">
+  <div class="card"><h2>기본 정보</h2><div class="row"><div class="field"><label>보고 날짜</label><input id="f2Date" type="date"></div><div class="field"><label>근무</label><div class="seg" id="f2Shift"><button data-v="주간" class="on">주간</button><button data-v="야간">야간</button></div></div></div><div class="field"><label>변경 시간 (10분 단위)</label><div id="f2TimePicker" class="time-picker"></div></div></div>
+  <div class="card"><h2>라인별 변경</h2><p class="small">대상 라인을 직접 입력하지 않아도 됩니다. 여러 라인을 서로 다른 방향으로 동시에 변경할 수 있습니다.</p><div id="f2Changes"></div></div>
+  <div class="card"><h2>현재 가동현황</h2><p class="small">가동 중인 항목만 선택하세요. 새 날짜는 직전 근무의 상태를 자동으로 이어받습니다.</p><div id="f2LineChoices" class="current-grid"></div></div>
+  <div class="card"><h2>보고문</h2><div id="f2Out" class="output"></div><div class="actions"><button class="btn primary" data-copy="f2Out">복사</button><button class="btn soft" data-share="f2Out">공유</button></div></div>
+  <div class="card"><h2>라인 관리</h2><p class="small">새 라인을 추가하면 이 기기에 저장되어 다음에도 그대로 표시됩니다.</p><div class="custom-line"><input id="newLine" placeholder="예: DN8 #5"><button class="btn primary" id="addLine" style="padding:10px 14px">추가</button></div><div id="customList" class="custom-list"></div></div>
+</section>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const pad=n=>String(n).padStart(2,'0');
+const todayLocal=()=>{const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
+const fmtDate=v=>{if(!v)return '';const [,m,d]=v.split('-');return `${m}월 ${d}일`};
+function bindSeg(id,cb){const el=$(id);el.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON')return;e.preventDefault();[...el.children].forEach(b=>b.classList.remove('on'));e.target.classList.add('on');cb&&cb();});}
+function segVal(id){return $(`${id} button.on`).dataset.v}
+function round10(id){const el=$(id);const [h,m]=(el.value||'00:00').split(':').map(Number);let total=h*60+m;total=Math.round(total/10)*10;total=(total+1440)%1440;el.value=`${pad(Math.floor(total/60))}:${pad(total%60)}`;}
+function nearest10Now(){const d=new Date();let total=d.getHours()*60+d.getMinutes();total=Math.round(total/10)*10;total=(total+1440)%1440;return `${pad(Math.floor(total/60))}:${pad(total%60)}`;}
+const timeValues={f1:nearest10Now(),f2:nearest10Now()};
+function setTimeValue(key,value){const [h,m]=(value||nearest10Now()).split(':').map(Number);let total=((h||0)*60+(m||0));total=Math.round(total/10)*10;total=(total+1440)%1440;timeValues[key]=`${pad(Math.floor(total/60))}:${pad(total%60)}`;renderTimePicker(key);}
+function stepTime(key,delta){const [h,m]=timeValues[key].split(':').map(Number);let total=(h*60+m+delta+1440)%1440;timeValues[key]=`${pad(Math.floor(total/60))}:${pad(total%60)}`;renderTimePicker(key);if(key==='f1'){renderF1();saveF1()}else{renderF2();saveF2()}}
+function renderTimePicker(key){const id=key==='f1'?'#f1TimePicker':'#f2TimePicker', box=$(id);if(!box)return;const [h,m]=timeValues[key].split(':');box.innerHTML=`<div class="time-part"><label>시간</label><div class="time-step"><button type="button" data-delta="-60">−</button><div class="time-value">${h}시</div><button type="button" data-delta="60">＋</button></div></div><div class="time-part"><label>분</label><div class="time-step"><button type="button" data-delta="-10">−</button><div class="time-value">${m}분</div><button type="button" data-delta="10">＋</button></div></div><button type="button" class="now-btn">현재시간</button>`;box.querySelectorAll('[data-delta]').forEach(b=>b.onclick=()=>stepTime(key,+b.dataset.delta));box.querySelector('.now-btn').onclick=()=>{timeValues[key]=nearest10Now();renderTimePicker(key);if(key==='f1'){renderF1();saveF1()}else{renderF2();saveF2()}};}
+$$('.tab').forEach(b=>b.onclick=()=>{$$('.tab').forEach(x=>x.classList.toggle('active',x===b));$$('.panel').forEach(p=>p.classList.toggle('active',p.id===b.dataset.tab));if(b.dataset.tab==='floor1')syncF1FromAttendanceOnOpen();});
+['aDate','f1Date','f2Date'].forEach(id=>$('#'+id).value=todayLocal());
+
+// 날짜별 저장 공통
+const REPORT_STORE_KEY='hgpSeochungjuReportsV7';
+const LEGACY_REPORT_STORE_KEY='hgpSeochungjuReportsV6';
+let reportStore=JSON.parse(localStorage.getItem(REPORT_STORE_KEY)||localStorage.getItem(LEGACY_REPORT_STORE_KEY)||'{}');
+if(!localStorage.getItem(REPORT_STORE_KEY)&&Object.keys(reportStore).length)localStorage.setItem(REPORT_STORE_KEY,JSON.stringify(reportStore));
+function reportKey(section,date,shift){return `${section}|${date}|${shift}`}
+function getReport(section,date,shift){return reportStore[reportKey(section,date,shift)]||null}
+function putReport(section,date,shift,data){reportStore[reportKey(section,date,shift)]=data;localStorage.setItem(REPORT_STORE_KEY,JSON.stringify(reportStore));}
+function setSeg(id,value){const el=$(id);[...el.children].forEach(b=>b.classList.toggle('on',b.dataset.v===value));}
+
+// 출근·잔업
+const att={work:Array(5).fill('비가동'),ot:Array(5).fill('비가동')};
+function attStatesForLine(i){return i===4?['비가동','MV','ME','MV GT']:['비가동','MV','ME'];}
+function renderAttLines(boxId,key){const box=$(boxId);box.innerHTML='';for(let i=1;i<=5;i++){const r=document.createElement('div');r.className='line-grid';r.innerHTML=`<div class="line-no">${i}L</div><div class="line-state">${attStatesForLine(i-1).map(v=>`<button type="button" data-i="${i-1}" data-v="${v}" class="${att[key][i-1]===v?'on':''}">${v}</button>`).join('')}</div>`;box.append(r)}box.onclick=e=>{if(e.target.tagName!=='BUTTON')return;att[key][+e.target.dataset.i]=e.target.dataset.v;renderAttLines(boxId,key);renderAttendance();saveAttendance();}}
+function formatMVME(states){const mv=[],me=[];states.forEach((s,i)=>{if(s==='MV')mv.push(String(i+1));if(s==='MV GT')mv.push(`${i+1}(GT)`);if(s==='ME')me.push(String(i+1));});const rows=[];if(mv.length)rows.push(`MV ${mv.join(', ')}`);if(me.length)rows.push(`ME ${me.join(', ')}`);return rows;}
+let workers=JSON.parse(localStorage.getItem('hgpSeochungjuWorkers')||'[]');
+const selectedWorkers={work:new Set(),ot:new Set()};
+function saveWorkers(){localStorage.setItem('hgpSeochungjuWorkers',JSON.stringify(workers))}
+function renderWorkerChoices(){[['#attWorkPeople','work'],['#attOtPeople','ot']].forEach(([sel,key])=>{const box=$(sel);box.innerHTML='';workers.forEach(name=>{const b=document.createElement('button');b.type='button';b.className='worker-chip'+(selectedWorkers[key].has(name)?' on':'');b.textContent=(selectedWorkers[key].has(name)?'✓ ':'')+name;b.onclick=()=>{selectedWorkers[key].has(name)?selectedWorkers[key].delete(name):selectedWorkers[key].add(name);renderWorkerChoices();renderAttendance();saveAttendance()};box.append(b)});if(!workers.length){const p=document.createElement('span');p.className='small';p.textContent='아래에서 작업자를 먼저 추가하세요.';box.append(p)}});const list=$('#workerList');list.innerHTML='';workers.forEach(name=>{const d=document.createElement('div');d.className='worker-item';d.innerHTML=`<span>${name}</span><button type="button">삭제</button>`;d.querySelector('button').onclick=()=>{workers=workers.filter(x=>x!==name);selectedWorkers.work.delete(name);selectedWorkers.ot.delete(name);saveWorkers();renderWorkerChoices();renderAttendance();saveAttendance()};list.append(d)})}
+$('#addWorker').onclick=()=>{const v=$('#newWorker').value.trim();if(!v)return;if(workers.includes(v)){toast('이미 등록된 작업자입니다.');return}workers.push(v);saveWorkers();$('#newWorker').value='';renderWorkerChoices();renderAttendance();};
+function attendanceText(type,states,workerKey){const lines=formatMVME(states),ps=[...selectedWorkers[workerKey]],allOff=states.every(v=>v==='비가동');let s=`HGP 서충주\n${fmtDate($('#aDate').value)} ${segVal('#aShift')}\nMV EV E603A SKOJ\n\n${type==='출근'?'금일 가동계획':'금일 잔업'}\n`;if(allOff){s+=type==='출근'?'전라인 비가동입니다.\n':'청소잔업입니다.\n';}else{s+=lines.join('\n')+'\n라인 가동입니다.\n';}s+=`\n${type==='출근'?'출근 인원':'잔업 인원'}\n${ps.join(', ')}\n${ps.length}명 입니다.`;return s;}
+function renderAttendance(){$('#attWorkOut').textContent=attendanceText('출근',att.work,'work');$('#attOtOut').textContent=attendanceText('잔업',att.ot,'ot');}
+function saveAttendance(){putReport('attendance',$('#aDate').value,segVal('#aShift'),{work:[...att.work],ot:[...att.ot],workPeople:[...selectedWorkers.work],otPeople:[...selectedWorkers.ot]});}
+function loadAttendance(){const d=getReport('attendance',$('#aDate').value,segVal('#aShift'));att.work=d?.work?.slice(0,5)||Array(5).fill('비가동');att.ot=d?.ot?.slice(0,5)||Array(5).fill('비가동');for(let i=0;i<4;i++){if(att.work[i]==='MV GT')att.work[i]='MV';if(att.ot[i]==='MV GT')att.ot[i]='MV';}selectedWorkers.work=new Set((d?.workPeople||[]).filter(x=>workers.includes(x)));selectedWorkers.ot=new Set((d?.otPeople||[]).filter(x=>workers.includes(x)));renderAttLines('#attWorkLines','work');renderAttLines('#attOtLines','ot');renderWorkerChoices();renderAttendance();}
+bindSeg('#aShift',loadAttendance);$('#aDate').onchange=loadAttendance;loadAttendance();
+
+// 1층 변경 — 출근 상태 단방향 반영 + 비가동 대응
+const f1={current:['비가동','비가동','비가동','비가동','비가동'],change:['없음','없음','없음','없음','없음']};
+function f1StatesForLine(i){return i===4?['비가동','MV','ME','MV GT']:['비가동','MV','ME'];}
+function renderF1Lines(){const box=$('#f1Lines');box.innerHTML='';for(let i=0;i<5;i++){const states=f1StatesForLine(i);if(!states.includes(f1.current[i]))f1.current[i]='비가동';if(f1.change[i]!=='없음'&&!states.includes(f1.change[i]))f1.change[i]='없음';const r=document.createElement('div');r.className='status-row';r.innerHTML=`<b>${i+1}L</b><select data-kind="current" data-i="${i}">${states.map(v=>`<option value="${v}" ${f1.current[i]===v?'selected':''}>${v}</option>`).join('')}</select><select data-kind="change" data-i="${i}"><option value="없음" ${f1.change[i]==='없음'?'selected':''}>변경 없음</option>${states.map(v=>`<option value="${v}" ${f1.change[i]===v?'selected':''}>${v}로 변경</option>`).join('')}</select>`;box.append(r)}box.onchange=e=>{const i=+e.target.dataset.i,k=e.target.dataset.kind;if(k){f1[k][i]=e.target.value;renderF1();saveF1();}}}
+function finalF1States(){return f1.current.map((v,i)=>f1.change[i]==='없음'?v:f1.change[i]);}
+function f1TransitionText(g){const ls=`${g.lines.join(', ')}라인`;
+ if(g.from==='비가동'&&g.to!=='비가동')return `${ls} \n비가동에서 ${g.to} 차종으로`;
+ if(g.to==='비가동'&&g.from!=='비가동')return `${ls} \n${g.from} 차종에서 비가동으로`;
+ return `${ls} \n${g.from}에서 ${g.to} 차종으로`;}
+function renderF1(){const finals=finalF1States();const lines=formatMVME(finals);const current=`현재 가동현황\n${lines.length?lines.join('\n'):'전라인 비가동입니다.'}${lines.length?'\n라인 가동입니다.':''}`;const groups={};for(let i=0;i<5;i++){const to=f1.change[i];if(to==='없음'||to===f1.current[i])continue;const from=f1.current[i],key=from+'→'+to;(groups[key]??={from,to,lines:[]}).lines.push(i+1);}const chunks=Object.values(groups).map(f1TransitionText);let s=`HGP 서충주\n${fmtDate($('#f1Date').value)} ${segVal('#f1Shift')}\nMV EV E603A SKOJ \n생산 차종변경 \n${timeValues.f1} ~\n`;if(chunks.length){s+=chunks.join(',\n\n');const anyStart=Object.values(groups).some(g=>g.from==='비가동'&&g.to!=='비가동');const anyStop=Object.values(groups).some(g=>g.to==='비가동');if(anyStart&&!anyStop)s+='\n변경하여 가동합니다.\n\n';else if(!anyStart&&anyStop)s+='\n변경합니다.\n\n';else s+='\n변경합니다.\n\n';}else s+='변경 내역 없음\n\n';s+=current;$('#f1Out').textContent=s;}
+function saveF1(){putReport('floor1',$('#f1Date').value,segVal('#f1Shift'),{time:timeValues.f1,current:[...f1.current],change:[...f1.change]});}
+function attendanceToF1Current(a){return (a?.work||Array(5).fill('비가동')).slice(0,5).map((v,i)=>{if(i<4&&v==='MV GT')return 'MV';return ['비가동','MV','ME','MV GT'].includes(v)?v:'비가동';});}
+function hasActualF1Changes(){return f1.change.some(v=>v!=='없음');}
+function syncF1FromAttendanceOnOpen(){const date=$('#f1Date').value,shift=segVal('#f1Shift');const a=getReport('attendance',date,shift);if(!a?.work?.length)return;const d=getReport('floor1',date,shift);if(d?.change?.some(v=>v!=='없음'))return;f1.current=attendanceToF1Current(a);f1.change=d?.change?.slice(0,5)||Array(5).fill('없음');if(d?.time)setTimeValue('f1',d.time);renderF1Lines();renderF1();saveF1();}
+function loadF1(){const date=$('#f1Date').value,shift=segVal('#f1Shift');const d=getReport('floor1',date,shift);if(d){f1.current=(d.current||Array(5).fill('비가동')).slice(0,5);f1.change=(d.change||Array(5).fill('없음')).slice(0,5);setTimeValue('f1',d.time||nearest10Now());}else{const a=getReport('attendance',date,shift);f1.current=a?.work?.length?attendanceToF1Current(a):Array(5).fill('비가동');f1.change=Array(5).fill('없음');setTimeValue('f1',nearest10Now());}renderF1Lines();renderF1();}
+bindSeg('#f1Shift',loadF1);$('#f1Date').onchange=loadF1;loadF1();
+
+// 2층 변경 — 품목 자동 표기 + 여러 방향 동시 변경
+const baseLines=['MQ4 #1','MQ4 #2','MQ4 #3','DN8 #2','DN8 #3','DN8 #4','HR-PU'];
+let customLines=JSON.parse(localStorage.getItem('hgpSeochungjuCustomLines')||'[]');
+let selectedLines=new Set();
+let f2Changes={};
+function allLines(){return [...baseLines,...customLines]}
+function saveCustom(){localStorage.setItem('hgpSeochungjuCustomLines',JSON.stringify(customLines))}
+function ensureF2(){allLines().forEach(v=>{if(!(v in f2Changes))f2Changes[v]='없음'});Object.keys(f2Changes).forEach(v=>{if(!allLines().includes(v))delete f2Changes[v]});}
+function renderF2Changes(){ensureF2();const box=$('#f2Changes');box.innerHTML='';allLines().forEach(name=>{const r=document.createElement('div');r.className='job-row';r.innerHTML=`<div class="name">${name}</div><select data-line="${name.replaceAll('"','&quot;')}"><option value="없음" ${f2Changes[name]==='없음'?'selected':''}>변경 없음</option><option value="SKOJ→타사셀" ${f2Changes[name]==='SKOJ→타사셀'?'selected':''}>SKOJ → 타사셀</option><option value="타사셀→SKOJ" ${f2Changes[name]==='타사셀→SKOJ'?'selected':''}>타사셀 → SKOJ</option></select>`;box.append(r)});box.onchange=e=>{const line=e.target.dataset.line;if(line){f2Changes[line]=e.target.value;renderF2();saveF2();}}}
+function renderF2LineChoices(){const box=$('#f2LineChoices');box.innerHTML='';allLines().forEach(v=>{const b=document.createElement('button');b.className='chip'+(selectedLines.has(v)?' on':'');b.textContent=(selectedLines.has(v)?'✓ ':'')+v;b.onclick=()=>{selectedLines.has(v)?selectedLines.delete(v):selectedLines.add(v);renderF2LineChoices();renderF2();saveF2()};box.append(b)});const cl=$('#customList');cl.innerHTML='';customLines.forEach(v=>{const d=document.createElement('div');d.className='custom-item';d.innerHTML=`<span>${v}</span><button type="button">삭제</button>`;d.querySelector('button').onclick=()=>{customLines=customLines.filter(x=>x!==v);selectedLines.delete(v);delete f2Changes[v];saveCustom();renderF2Changes();renderF2LineChoices();renderF2();saveF2()};cl.append(d)});}
+$('#addLine').onclick=()=>{const v=$('#newLine').value.trim();if(!v)return;if(allLines().includes(v)){toast('이미 있는 라인입니다.');return}customLines.push(v);saveCustom();f2Changes[v]='없음';$('#newLine').value='';renderF2Changes();renderF2LineChoices();renderF2();saveF2();};
+function f2Headers(){ensureF2();const changed=allLines().filter(v=>f2Changes[v]!=='없음');const hasHr=changed.includes('HR-PU');const hasMain=changed.some(v=>v!=='HR-PU');const out=[];if(hasMain||!changed.length)out.push('MX5 H055 SKOJ');if(hasHr)out.push('HR-PU EV E600C EUE');return out;}
+function renderF2(){ensureF2();const mainGroups={'SKOJ→타사셀':[],'타사셀→SKOJ':[]};let hrChange='없음';allLines().forEach(v=>{if(v==='HR-PU')hrChange=f2Changes[v];else if(mainGroups[f2Changes[v]])mainGroups[f2Changes[v]].push(v)});let blocks=[];if(mainGroups['SKOJ→타사셀'].length)blocks.push(`${mainGroups['SKOJ→타사셀'].join(', ')} Line\nSKOJ에서 타사셀 로`);if(mainGroups['타사셀→SKOJ'].length)blocks.push(`${mainGroups['타사셀→SKOJ'].join(', ')} Line\n타사셀에서 SKOJ 로`);if(hrChange==='SKOJ→타사셀')blocks.push(`HR-PU\nE600C EUE 에서\n타사셀로`);if(hrChange==='타사셀→SKOJ')blocks.push(`HR-PU\n타사셀에서\nE600C EUE 로`);const headers=f2Headers();const headerPreview=$('#f2HeaderAuto');if(headerPreview)headerPreview.textContent=headers.join('\n');let s=`HGP 서충주\n${fmtDate($('#f2Date').value)} ${segVal('#f2Shift')}\n${headers.join('\n')}\n생산 차종변경\n${timeValues.f2} ~\n`;if(blocks.length)s+=blocks.join(',\n\n')+'\nJob Change 되었습니다.\n\n';else s+='변경 내역 없음\n\n';s+='현재 가동현황\n';const arr=allLines().filter(v=>selectedLines.has(v));const rows=[];for(let i=0;i<arr.length;i+=2)rows.push(arr.slice(i,i+2).join(', ')+(i+2<arr.length?',':''));s+=rows.join('\n');$('#f2Out').textContent=s;}
+function saveF2(){putReport('floor2',$('#f2Date').value,segVal('#f2Shift'),{time:timeValues.f2,changes:{...f2Changes},selected:[...selectedLines]});}
+function shiftRank(date,shift){return `${date}|${shift==='주간'?'0':'1'}`;}
+function previousF2Selected(date,shift){const target=shiftRank(date,shift);let best=null,bestRank='';Object.entries(reportStore).forEach(([k,v])=>{const [section,d,s]=k.split('|');if(section!=='floor2'||!v?.selected)return;const r=shiftRank(d,s);if(r<target&&r>bestRank){bestRank=r;best=v;}});return (best?.selected||[]).filter(x=>allLines().includes(x));}
+function loadF2(){const date=$('#f2Date').value,shift=segVal('#f2Shift');const d=getReport('floor2',date,shift);f2Changes=d?.changes?{...d.changes}:{};const inherited=d?.selected||previousF2Selected(date,shift);selectedLines=new Set((inherited||[]).filter(x=>allLines().includes(x)));setTimeValue('f2',d?.time||nearest10Now());ensureF2();renderF2Changes();renderF2LineChoices();renderF2();}
+bindSeg('#f2Shift',loadF2);$('#f2Date').onchange=loadF2;loadF2();
+
+// 전체 백업 / 복원
+$('#backupExport').onclick=()=>{const data={app:'HGP 서충주 보고앱',version:8,exportedAt:new Date().toISOString(),storage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('hgpSeochungju'))data.storage[k]=localStorage.getItem(k);}const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`HGP_서충주_백업_${todayLocal()}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('백업 파일을 만들었습니다.');};
+$('#backupImportBtn').onclick=()=>$('#backupImport').click();
+$('#backupImport').onchange=e=>{const file=e.target.files?.[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!data.storage||typeof data.storage!=='object')throw new Error('invalid');if(!confirm('현재 저장된 서충주 앱 데이터를 백업 파일 내용으로 복원할까요?'))return;Object.keys(localStorage).filter(k=>k.startsWith('hgpSeochungju')).forEach(k=>localStorage.removeItem(k));Object.entries(data.storage).forEach(([k,v])=>{if(k.startsWith('hgpSeochungju'))localStorage.setItem(k,String(v));});alert('복원이 완료되었습니다. 앱을 다시 불러옵니다.');location.reload();}catch{toast('올바른 백업 파일이 아닙니다.');}};r.readAsText(file);};
+
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
+async function copyText(id){const txt=$('#'+id).textContent;try{await navigator.clipboard.writeText(txt);toast('복사했습니다.')}catch{const ta=document.createElement('textarea');ta.value=txt;document.body.append(ta);ta.select();document.execCommand('copy');ta.remove();toast('복사했습니다.')}}
+async function shareText(id){const txt=$('#'+id).textContent;if(navigator.share){try{await navigator.share({text:txt});}catch(e){if(e.name!=='AbortError')toast('공유할 수 없습니다.')}}else{await copyText(id);toast('공유 기능이 없어 복사했습니다.')}}
+$$('[data-copy]').forEach(b=>b.onclick=()=>copyText(b.dataset.copy));$$('[data-share]').forEach(b=>b.onclick=()=>shareText(b.dataset.share));
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
