@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0f172a" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<title>HGP 서충주 보고앱</title>
+<style>
+:root{--bg:#f1f5f9;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#dbe3ee;--accent:#2563eb;--accent2:#dbeafe;--danger:#dc2626;--ok:#059669}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink)}
+.app{max-width:760px;margin:0 auto;padding:14px 12px 40px}.top{background:#0f172a;color:#fff;border-radius:20px;padding:20px 18px;margin-bottom:12px}.top h1{font-size:22px;margin:0 0 4px}.top p{margin:0;color:#cbd5e1;font-size:13px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.tab{border:0;border-radius:13px;background:#fff;padding:11px 5px;font-weight:800;color:#475569;box-shadow:0 1px 4px #00000012}.tab.active{background:var(--accent);color:#fff}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px #00000008}.card h2{font-size:16px;margin:0 0 12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}.row.one{grid-template-columns:1fr}.field label{display:block;font-size:12px;font-weight:800;color:#475569;margin:0 0 5px}.field input,.field select,.field textarea{width:100%;border:1px solid #cbd5e1;background:#fff;border-radius:11px;padding:11px;font:inherit;font-size:15px;color:var(--ink)}.field textarea{min-height:76px;resize:vertical}.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button,.chip{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 11px;font-weight:700;color:#334155}.seg button.on,.chip.on{border-color:var(--accent);background:var(--accent2);color:#1d4ed8}.line-grid{display:grid;grid-template-columns:44px 1fr;gap:7px;align-items:center;margin:7px 0}.line-no{font-weight:900;text-align:center}.line-state{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.line-state button{font-size:12px;padding:8px 3px}.change-row{display:grid;grid-template-columns:48px 1fr 24px 1fr;gap:6px;align-items:center;margin:7px 0}.change-row .arrow{text-align:center;color:#64748b}.current-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.current-grid .chip{width:100%}.output{white-space:pre-wrap;background:#f8fafc;border:1px solid #cbd5e1;border-radius:14px;padding:15px;min-height:200px;font-size:15px;line-height:1.55}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.btn{border:0;border-radius:12px;padding:12px;font-weight:900;font-size:15px}.btn.primary{background:var(--accent);color:#fff}.btn.soft{background:#e2e8f0;color:#0f172a}.btn.danger{background:#fee2e2;color:#b91c1c}.small{font-size:12px;color:var(--muted);line-height:1.45}.custom-line{display:flex;gap:7px;margin-top:8px}.custom-line input{flex:1;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font:inherit}.custom-list{margin-top:8px}.custom-item{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e2e8f0;padding:8px 0}.custom-item button{border:0;background:#fee2e2;color:#b91c1c;border-radius:8px;padding:6px 9px;font-weight:800}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#0f172a;color:white;padding:10px 14px;border-radius:12px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}.hidden{display:none!important}
+@media(max-width:520px){.app{padding:10px 8px 32px}.top{border-radius:16px;padding:16px}.tabs{gap:5px}.tab{font-size:12px;padding:10px 3px}.card{border-radius:15px;padding:12px}.row{grid-template-columns:1fr}.line-state{grid-template-columns:repeat(4,1fr)}.change-row{grid-template-columns:40px 1fr 20px 1fr}.field input,.field select{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top"><h1>HGP 서충주 보고앱</h1><p>출근·잔업 / MV·ME 차종변경 / Job Change</p></header>
+  <nav class="tabs">
+    <button class="tab active" data-tab="attendance">출근·잔업</button>
+    <button class="tab" data-tab="mvme">MV·ME 변경</button>
+    <button class="tab" data-tab="job">Job Change</button>
+  </nav>
+
+  <section id="attendance" class="panel active">
+    <div class="card">
+      <h2>기본 정보</h2>
+      <div class="row"><div class="field"><label>보고 날짜</label><input id="aDate" type="date"></div><div class="field"><label>근무</label><div class="seg" id="aShift"><button data-v="주간" class="on">주간</button><button data-v="야간">야간</button></div></div></div>
+      <div class="field"><label>보고 종류</label><div class="seg" id="aType"><button data-v="출근" class="on">출근보고</button><button data-v="잔업">잔업보고</button></div></div>
+    </div>
+    <div class="card">
+      <h2>가동 라인</h2>
+      <p class="small">각 라인의 상태를 선택하세요. MV GT는 보고문에서 5(GT)처럼 표시됩니다.</p>
+      <div id="aLines"></div>
+    </div>
+    <div class="card"><h2>인원</h2><div class="field"><label>이름 (쉼표로 구분)</label><textarea id="aPeople" placeholder="예: 김재근, 유정숙, 최성묵"></textarea></div></div>
+    <div class="card"><h2>보고문</h2><div id="aOut" class="output"></div><div class="actions"><button class="btn primary" data-copy="aOut">보고문 복사</button><button class="btn soft" id="aReset">입력 초기화</button></div></div>
+  </section>
+
+  <section id="mvme" class="panel">
+    <div class="card">
+      <h2>기본 정보</h2>
+      <div class="row"><div class="field"><label>보고 날짜</label><input id="mDate" type="date"></div><div class="field"><label>근무</label><div class="seg" id="mShift"><button data-v="주간" class="on">주간</button><button data-v="야간">야간</button></div></div></div>
+      <div class="field"><label>변경 시간</label><input id="mTime" type="time" value="13:00"></div>
+    </div>
+    <div class="card">
+      <h2>라인별 변경</h2><p class="small">변경하지 않는 라인은 전·후를 같게 두세요. 서로 다른 항목만 보고문에 자동으로 묶어 표시합니다.</p>
+      <div id="mChanges"></div>
+    </div>
+    <div class="card"><h2>현재 가동현황</h2><p class="small">변경 후 상태를 기준으로 자동 생성됩니다.</p><div id="mCurrentPreview" class="output" style="min-height:80px"></div></div>
+    <div class="card"><h2>보고문</h2><div id="mOut" class="output"></div><div class="actions"><button class="btn primary" data-copy="mOut">보고문 복사</button><button class="btn soft" id="mReset">입력 초기화</button></div></div>
+  </section>
+
+  <section id="job" class="panel">
+    <div class="card">
+      <h2>기본 정보</h2>
+      <div class="row"><div class="field"><label>보고 날짜</label><input id="jDate" type="date"></div><div class="field"><label>근무</label><div class="seg" id="jShift"><button data-v="주간" class="on">주간</button><button data-v="야간">야간</button></div></div></div>
+      <div class="field"><label>품목 표기</label><select id="jHeader"><option>MX5 H055 SKOJ</option><option>HR-PU EV E600C EUE</option><option value="custom">직접 입력</option></select></div>
+      <div class="field hidden" id="jHeaderCustomWrap"><label>품목 직접 입력</label><input id="jHeaderCustom" placeholder="예: XXXX XXXX SKOJ"></div>
+      <div class="row"><div class="field"><label>변경 종류</label><select id="jKind"><option>투입셀 변경</option><option>생산 차종변경</option></select></div><div class="field"><label>변경 시간</label><input id="jTime" type="time" value="08:00"></div></div>
+      <div class="field"><label>대상 라인 / 대상명 (없으면 비워두기)</label><input id="jTarget" placeholder="예: DN8 #2 Line 또는 MQ4 #1 Line"></div>
+      <div class="row"><div class="field"><label>변경 전</label><input id="jFrom" list="jobTerms" value="SKOJ"></div><div class="field"><label>변경 후</label><input id="jTo" list="jobTerms" value="타사셀"></div></div>
+      <datalist id="jobTerms"><option value="SKOJ"><option value="타사셀"><option value="E600C EUE"><option value="MV"><option value="ME"></datalist>
+    </div>
+    <div class="card"><h2>현재 가동현황</h2><p class="small">가동 중인 항목만 선택하세요.</p><div id="jLineChoices" class="current-grid"></div></div>
+    <div class="card"><h2>라인 관리</h2><p class="small">새 라인을 추가하면 이 기기에 저장되어 다음에도 선택할 수 있습니다.</p><div class="custom-line"><input id="newLine" placeholder="예: DN8 #5"><button class="btn primary" id="addLine" style="padding:10px 14px">추가</button></div><div id="customList" class="custom-list"></div></div>
+    <div class="card"><h2>보고문</h2><div id="jOut" class="output"></div><div class="actions"><button class="btn primary" data-copy="jOut">보고문 복사</button><button class="btn soft" id="jReset">입력 초기화</button></div></div>
+  </section>
+</div>
+<div id="toast" class="toast">복사했습니다.</div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const todayLocal=()=>{const d=new Date(); const z=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`};
+const fmtDate=v=>{if(!v)return ''; const [y,m,d]=v.split('-'); return `${m}월 ${d}일`};
+function bindSeg(id, cb){const el=$(id); el.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON')return; e.preventDefault(); [...el.children].forEach(b=>b.classList.remove('on')); e.target.classList.add('on'); cb&&cb(e.target.dataset.v);});}
+function segVal(id){return $(`${id} button.on`).dataset.v}
+$$('.tab').forEach(b=>b.onclick=()=>{$$('.tab').forEach(x=>x.classList.toggle('active',x===b)); $$('.panel').forEach(p=>p.classList.toggle('active',p.id===b.dataset.tab));});
+['aDate','mDate','jDate'].forEach(id=>$('#'+id).value=todayLocal());
+
+// 출근·잔업
+const att={states:Array(5).fill('미가동')};
+function renderALines(){const box=$('#aLines');box.innerHTML=''; for(let i=1;i<=5;i++){const row=document.createElement('div');row.className='line-grid';row.innerHTML=`<div class="line-no">${i}L</div><div class="line-state">${['미가동','MV','ME','MV GT'].map(v=>`<button data-i="${i-1}" data-v="${v}" class="${att.states[i-1]===v?'on':''}">${v}</button>`).join('')}</div>`;box.append(row)} box.onclick=e=>{if(e.target.tagName!=='BUTTON')return;att.states[+e.target.dataset.i]=e.target.dataset.v;renderALines();renderA()}}
+function formatMVME(states){const mv=[],me=[]; states.forEach((s,i)=>{if(s==='MV')mv.push(String(i+1)); if(s==='MV GT')mv.push(`${i+1}(GT)`); if(s==='ME')me.push(String(i+1));}); const out=[];if(mv.length)out.push(`MV ${mv.join(', ')}`);if(me.length)out.push(`ME ${me.join(', ')}`);return out}
+function names(){return $('#aPeople').value.split(',').map(x=>x.trim()).filter(Boolean)}
+function renderA(){const type=segVal('#aType'), lines=formatMVME(att.states), ps=names(); let s=`HGP 서충주\n${fmtDate($('#aDate').value)} ${segVal('#aShift')}\nMV EV E603A SKOJ\n\n${type==='출근'?'금일 가동계획':'금일 잔업'}\n`; if(lines.length)s+=lines.join('\n')+'\n'; s+='라인 가동입니다.\n\n'+(type==='출근'?'출근 인원':'잔업 인원')+'\n'; s+=(ps.length?ps.join(', '):'')+`\n${ps.length}명 입니다.`; $('#aOut').textContent=s}
+bindSeg('#aShift',renderA);bindSeg('#aType',renderA);$('#aDate').oninput=renderA;$('#aPeople').oninput=renderA;$('#aReset').onclick=()=>{att.states=Array(5).fill('미가동');$('#aPeople').value='';renderALines();renderA()};renderALines();renderA();
+
+// MV·ME 변경
+const mState={from:['ME','ME','ME','ME','MV GT'],to:['MV','MV','MV','MV','MV']}; const opts=['미가동','MV','ME','MV GT'];
+function renderMChanges(){const b=$('#mChanges');b.innerHTML='';for(let i=0;i<5;i++){const r=document.createElement('div');r.className='change-row';r.innerHTML=`<b>${i+1}L</b><select data-side="from" data-i="${i}">${opts.map(v=>`<option ${mState.from[i]===v?'selected':''}>${v}</option>`).join('')}</select><span class="arrow">→</span><select data-side="to" data-i="${i}">${opts.map(v=>`<option ${mState.to[i]===v?'selected':''}>${v}</option>`).join('')}</select>`;b.append(r)} b.onchange=e=>{const i=+e.target.dataset.i,side=e.target.dataset.side;if(side)mState[side][i]=e.target.value;renderM()}}
+function stateWord(v){return v==='MV GT'?'MV GT':v}
+function renderM(){const groups={};for(let i=0;i<5;i++){const f=mState.from[i],t=mState.to[i];if(f!==t){const k=f+'→'+t;(groups[k]??={f,t,lines:[]}).lines.push(i+1)}} let chunks=[];Object.values(groups).forEach(g=>{chunks.push(`${g.lines.join(', ')}라인 \n${stateWord(g.f)}에서 ${stateWord(g.t)} 차종으로`) }); const cur=formatMVME(mState.to); const current=`현재 가동현황\n${cur.join('\n')}\n라인 가동입니다.`;$('#mCurrentPreview').textContent=current; let s=`HGP 서충주\n${fmtDate($('#mDate').value)} ${segVal('#mShift')}\nMV EV E603A SKOJ \n생산 차종변경 \n${$('#mTime').value} ~\n`; if(chunks.length)s+=chunks.join(',\n\n')+'\n변경하여 가동합니다.\n\n'; else s+='변경 내역 없음\n\n'; s+=current;$('#mOut').textContent=s}
+bindSeg('#mShift',renderM);$('#mDate').oninput=renderM;$('#mTime').oninput=renderM;$('#mReset').onclick=()=>{mState.from=['ME','ME','ME','ME','MV GT'];mState.to=['MV','MV','MV','MV','MV'];$('#mTime').value='13:00';renderMChanges();renderM()};renderMChanges();renderM();
+
+// Job Change
+const baseLines=['MQ4 #1','MQ4 #2','MQ4 #3','DN8 #2','DN8 #3','DN8 #4','HR-PU'];
+let customLines=JSON.parse(localStorage.getItem('hgpSeochungjuCustomLines')||'[]'); let selectedLines=new Set();
+function allLines(){return [...baseLines,...customLines]}
+function saveCustom(){localStorage.setItem('hgpSeochungjuCustomLines',JSON.stringify(customLines))}
+function renderJLines(){const box=$('#jLineChoices');box.innerHTML='';allLines().forEach(v=>{const b=document.createElement('button');b.className='chip'+(selectedLines.has(v)?' on':'');b.textContent=v;b.onclick=()=>{selectedLines.has(v)?selectedLines.delete(v):selectedLines.add(v);renderJLines();renderJ()};box.append(b)}); const cl=$('#customList');cl.innerHTML='';customLines.forEach(v=>{const d=document.createElement('div');d.className='custom-item';d.innerHTML=`<span>${v}</span><button>삭제</button>`;d.querySelector('button').onclick=()=>{customLines=customLines.filter(x=>x!==v);selectedLines.delete(v);saveCustom();renderJLines();renderJ()};cl.append(d)})}
+$('#addLine').onclick=()=>{const v=$('#newLine').value.trim();if(!v)return;if(allLines().includes(v)){toast('이미 있는 라인입니다.');return}customLines.push(v);saveCustom();$('#newLine').value='';renderJLines();renderJ()};
+function jobHeader(){return $('#jHeader').value==='custom'?($('#jHeaderCustom').value.trim()||'품목명'):$('#jHeader').value}
+function renderJ(){const target=$('#jTarget').value.trim(),from=$('#jFrom').value.trim(),to=$('#jTo').value.trim(); let s=`HGP 서충주\n${fmtDate($('#jDate').value)} ${segVal('#jShift')}\n${jobHeader()}\n${$('#jKind').value}\n${$('#jTime').value} ~\n`; if(target)s+=`${target}\n`; s+=`${from}에서 ${to} 로\nJob Change 되었습니다.\n\n현재 가동현황\n`; const arr=allLines().filter(v=>selectedLines.has(v)); const rows=[]; for(let i=0;i<arr.length;i+=2) rows.push(arr.slice(i,i+2).join(', ')+(i+2<arr.length?',':'')); s+=rows.join('\n'); $('#jOut').textContent=s}
+bindSeg('#jShift',renderJ);['jDate','jKind','jTime','jTarget','jFrom','jTo','jHeaderCustom'].forEach(id=>$('#'+id).addEventListener('input',renderJ));$('#jHeader').onchange=()=>{$('#jHeaderCustomWrap').classList.toggle('hidden',$('#jHeader').value!=='custom');renderJ()};$('#jReset').onclick=()=>{$('#jTarget').value='';$('#jFrom').value='SKOJ';$('#jTo').value='타사셀';$('#jTime').value='08:00';selectedLines.clear();renderJLines();renderJ()};renderJLines();renderJ();
+
+function toast(msg='복사했습니다.'){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1400)}
+$$('[data-copy]').forEach(b=>b.onclick=async()=>{const txt=$('#'+b.dataset.copy).textContent;try{await navigator.clipboard.writeText(txt);toast()}catch{const ta=document.createElement('textarea');ta.value=txt;document.body.append(ta);ta.select();document.execCommand('copy');ta.remove();toast()}});
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
